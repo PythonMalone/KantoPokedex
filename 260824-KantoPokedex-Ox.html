@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Kanto Pokédex · Gen 1 · #001–151</title>
+<style>
+:root{
+  --bg:#0e1120;--panel:#171b2e;--panel2:#1e2340;--line:#2a3050;
+  --ink:#eef1ff;--mut:#98a1c6;--acc:#ffcb05;--acc2:#3b5ba9;--r:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scrollbar-gutter:stable}
+html,body{margin:0}
+body{
+  min-height:100vh;color:var(--ink);
+  font-family:ui-rounded,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:radial-gradient(1100px 600px at 85% -10%,#20264a,var(--bg)) fixed;
+}
+body.squad{background:radial-gradient(1200px 700px at 50% -10%,#123a63,#081a30) fixed}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:22px clamp(16px,4vw,44px) 4px}
+h1{margin:0;font-size:clamp(1.35rem,3.2vw,2rem);letter-spacing:.4px;display:flex;align-items:center;gap:.55em}
+h1 .pokeball{width:1em;height:1em;flex:none;border-radius:50%;background:
+  linear-gradient(#e3350d 0 46%,#22252e 46% 56%,#f0f2f7 56% 100%);position:relative;box-shadow:inset 0 0 0 .09em #22252e}
+h1 .pokeball::after{content:"";position:absolute;inset:32%;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 .07em #22252e}
+h1 small{display:block;width:100%;font-size:.48em;font-weight:600;color:var(--mut);letter-spacing:.16em;text-transform:uppercase;margin-top:2px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type=search],select{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:10px 15px;font-size:.93rem;outline:none;font-family:inherit}
+input[type=search]{min-width:min(250px,58vw)}
+input:focus-visible,select:focus-visible,.chip:focus-visible{border-color:var(--acc);outline:none}
+.typebar{display:flex;flex-wrap:wrap;gap:6px;padding:12px clamp(16px,4vw,44px) 14px}
+.chip{cursor:pointer;background:var(--panel);color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;font-family:inherit;transition:.15s}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--tc,var(--acc));border-color:transparent;color:#10121d}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:14px;padding:2px clamp(16px,4vw,44px) 40px}
+.card{position:relative;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--r);padding:14px 12px 12px;text-align:center;cursor:pointer;overflow:hidden;transition:transform .18s,border-color .18s,box-shadow .18s}
+.card::before{content:"";position:absolute;top:-34px;right:-34px;width:86px;height:86px;border-radius:50%;background:var(--tint,transparent);opacity:.28;filter:blur(2px)}
+.card:hover,.card:focus-visible{transform:translateY(-4px);border-color:#4a5588;box-shadow:0 12px 26px rgba(0,0,0,.45)}
+.card:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.num{position:absolute;top:9px;left:11px;font-size:.72rem;font-weight:800;color:var(--mut);letter-spacing:.06em}
+.card img{width:96px;height:96px;object-fit:contain;image-rendering:auto;margin:6px auto 4px;display:block}
+.card h2{margin:2px 0 8px;font-size:.95rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badges{display:flex;justify-content:center;gap:5px;flex-wrap:wrap}
+.badge{font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#10121d;background:var(--tc,#888)}
+.bst{margin-top:8px;font-size:.68rem;color:var(--mut);font-weight:600;letter-spacing:.05em}
+body.squad .leader{border-color:var(--acc);box-shadow:0 0 0 2px rgba(255,203,5,.45),0 14px 30px rgba(0,0,0,.5)}
+body.squad .leader::after{content:"🕶️";position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);font-size:44px;pointer-events:none}
+.empty{padding:60px 20px;text-align:center;color:var(--mut);font-weight:600}
+footer{padding:8px clamp(16px,4vw,44px) 30px;color:#5a6288;font-size:.75rem}
+/* ---------- modal ---------- */
+#overlay{position:fixed;inset:0;background:rgba(6,8,16,.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;z-index:40;overscroll-behavior:contain}
+#overlay.open{display:flex}
+.modal{position:relative;width:min(480px,100%);max-height:min(92vh,720px);overflow:auto;overscroll-behavior:contain;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid #39406b;border-radius:22px;padding:22px 22px 18px;animation:pop .22s ease}
+@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+.mclose{position:absolute;top:10px;right:12px;background:var(--panel);border:1px solid var(--line);color:var(--mut);border-radius:50%;width:34px;height:34px;font-size:1rem;cursor:pointer}
+.mclose:hover{color:var(--ink);border-color:#4a5588}
+.mnum{font-size:.78rem;font-weight:800;color:var(--mut);letter-spacing:.08em}
+.mname{margin:2px 0 4px;font-size:1.55rem;font-weight:800}
+.msprite{display:block;width:min(200px,52vw);height:min(200px,52vw);object-fit:contain;margin:4px auto 2px;cursor:pointer;user-select:none;-webkit-user-drag:none}
+.mdesc{text-align:center;color:#c6cdf0;font-size:.88rem;margin:6px auto 12px;max-width:36ch}
+.mrow{display:flex;justify-content:center;gap:18px;color:var(--mut);font-size:.82rem;font-weight:600;margin-bottom:12px}
+.mrow b{color:var(--ink)}
+.stats{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.stat{display:grid;grid-template-columns:74px 1fr 40px;align-items:center;gap:10px;font-size:.76rem;font-weight:700;color:var(--mut)}
+.bar{height:8px;border-radius:999px;background:#242a48;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--acc2),var(--acc));transition:width .4s ease}
+.nav{display:flex;justify-content:space-between;margin-top:16px}
+.nav button{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:8px 16px;font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer}
+.nav button:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
+.nav button:disabled{opacity:.35;cursor:default}
+/* ---------- fx / toast ---------- */
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,150%);opacity:0;visibility:hidden;background:#0d2c4e;border:1px solid #3b82c4;color:#dff1ff;font-weight:800;font-size:.9rem;padding:12px 22px;border-radius:999px;z-index:60;transition:transform .35s cubic-bezier(.2,1.4,.4,1),opacity .25s ease,visibility 0s linear .35s;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center;max-width:92vw}
+#toast.show{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform .35s cubic-bezier(.2,1.4,.4,1),opacity .25s ease}
+#fx{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:55;display:none}
+body.squad #fx{display:block}
+.drop{position:absolute;top:-6vh;font-size:26px;animation:fall linear infinite;opacity:.9}
+@keyframes fall{to{transform:translateY(116vh) rotate(340deg)}}
+@media (prefers-reduced-motion:reduce){.drop{display:none}.modal{animation:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="pokeball" aria-hidden="true"></span>Kanto Pokédex
+    <small>Generation I · Entries #001 – #151</small>
+  </h1>
+  <div class="controls">
+    <input id="q" type="search" placeholder="Search name or number…" aria-label="Search Pokémon by name or number" autocomplete="off">
+    <select id="sort" aria-label="Sort order">
+      <option value="dex">Sort: Dex № ↑</option>
+      <option value="dex-desc">Sort: Dex № ↓</option>
+      <option value="name">Sort: A → Z</option>
+      <option value="bst">Sort: Base stat total ↓</option>
+    </select>
+  </div>
+</header>
+
+<nav class="typebar" id="typebar" aria-label="Filter by type"></nav>
+<main class="grid" id="grid" role="list"></main>
+<div class="empty" id="empty" hidden>No Pokémon match your search. Try clearing filters.</div>
+<footer>Data: canonical Kanto order (Gen I) · Sprites via PokeAPI sprite CDN · Just vibes · Made by Hache.</footer>
+
+<!-- detail modal -->
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="mName">
+  <section class="modal">
+    <button class="mclose" id="mClose" aria-label="Close details">✕</button>
+    <div class="mnum" id="mNum"></div>
+    <h2 class="mname" id="mName"></h2>
+    <img class="msprite" id="mImg" alt="" draggable="false">
+    <p class="mdesc" id="mDesc"></p>
+    <div class="badges" id="mTypes" style="justify-content:center;margin-bottom:10px"></div>
+    <div class="mrow"><span>Height <b id="mHt"></b></span><span>Weight <b id="mWt"></b></span><span>BST <b id="mBst"></b></span></div>
+    <div class="stats" id="mStats"></div>
+    <div class="nav">
+      <button id="mPrev">← Prev</button>
+      <button id="mNext">Next →</button>
+    </div>
+  </section>
+</div>
+
+<div id="toast" role="status"></div>
+<div id="fx" aria-hidden="true"></div>
+
+<script>
+"use strict";
+/* ============ DATA — Gen 1, complete roster, entries 1–151 ============
+   [id, name, [types], height_m, weight_kg, baseStatTotal,
+    hp, atk, def, spe, flavor]                                   */
+const DEX=[
+/* [id, name, [types], height_m, weight_kg,
+    hp, atk, def, spA, spD, spe, flavor]  — BST computed at runtime */
+[1,"Bulbasaur",["grass","poison"],0.7,6.9,45,49,49,65,65,45,"A strange seed was planted on its back at birth."],
+[2,"Ivysaur",["grass","poison"],1.0,13.0,60,62,63,80,80,80,"The bulb on its back grows as it soaks up sunlight."],
+[3,"Venusaur",["grass","poison"],2.0,100.0,80,82,83,100,100,80,"Its flower releases a soothing scent after rain."],
+[4,"Charmander",["fire"],0.6,8.5,39,52,43,60,50,65,"The flame on its tail shows its life force."],
+[5,"Charmeleon",["fire"],1.1,19.0,58,64,58,80,65,80,"Hot-tempered; its tail flame flares when it gets angry."],
+[6,"Charizard",["fire","flying"],1.7,90.5,78,84,78,109,85,100,"Breathes fire hot enough to melt boulders."],
+[7,"Squirtle",["water"],0.5,9.0,44,48,65,50,64,43,"Shell up, shades on — leader of the Squad."],
+[8,"Wartortle",["water"],1.0,22.5,59,63,80,65,80,58,"Its long furry tail is a symbol of longevity."],
+[9,"Blastoise",["water"],1.6,85.5,79,83,100,85,105,78,"Hydro cannons on its shell blast with brutal force."],
+[10,"Caterpie",["bug"],0.3,2.9,45,30,35,20,20,45,"Its antennae release a foul stench to repel foes."],
+[11,"Metapod",["bug"],0.7,9.9,50,20,55,25,25,30,"It hardens its shell while awaiting evolution."],
+[12,"Butterfree",["bug","flying"],1.1,32.0,60,45,50,90,80,70,"It flaps its wings to scatter a toxic dust."],
+[13,"Weedle",["bug","poison"],0.3,3.2,40,35,30,20,20,50,"A tiny venomous stinger hides atop its head."],
+[14,"Kakuna",["bug","poison"],0.6,10.0,45,25,50,25,25,35,"Nearly motionless, it hardens as danger nears."],
+[15,"Beedrill",["bug","poison"],1.0,29.5,65,90,40,45,80,75,"Twin stingers jab in lightning-fast drills."],
+[16,"Pidgey",["normal","flying"],0.3,1.8,40,45,40,35,35,56,"A docile bird that prefers to flee, not fight."],
+[17,"Pidgeotto",["normal","flying"],1.1,30.0,63,60,55,50,50,71,"Claims a vast territory and patrols it fiercely."],
+[18,"Pidgeot",["normal","flying"],1.5,39.5,83,80,75,70,70,101,"Flies at Mach 2 in search of prey."],
+[19,"Rattata",["normal"],0.3,3.5,30,56,35,25,35,72,"Bites anything with its ever-growing fangs."],
+[20,"Raticate",["normal"],0.7,18.5,55,81,60,50,70,97,"Whiskers help it keep balance while running."],
+[21,"Spearow",["normal","flying"],0.3,2.0,40,60,30,31,31,70,"Far noisier and more aggressive than Pidgey."],
+[22,"Fearow",["normal","flying"],1.2,38.0,65,90,65,61,61,100,"Soars for days on huge wings without rest."],
+[23,"Ekans",["poison"],2.0,6.9,35,60,44,40,54,55,"It coils up silently before striking."],
+[24,"Arbok",["poison"],3.5,65.0,60,95,69,65,79,80,"Its hood pattern paralyzes prey with fear."],
+[25,"Pikachu",["electric"],0.4,6.0,35,55,40,50,50,90,"Stores electricity in the pouches of its cheeks."],
+[26,"Raichu",["electric"],0.8,30.0,60,90,55,90,80,110,"Discharges 100,000-volt bolts when battle-ready."],
+[27,"Sandshrew",["ground"],0.6,12.0,50,75,85,20,30,40,"Curls into a spiky ball to defend itself."],
+[28,"Sandslash",["ground"],1.0,29.5,75,100,110,45,55,65,"Its claws shed and regrow, sharp as swords."],
+[29,"Nidoran\u2640",["poison"],0.4,7.0,55,47,52,40,40,41,"Tiny barbs on its back secrete a potent venom."],
+[30,"Nidorina",["poison"],0.8,20.0,70,62,67,55,55,56,"A gentle mother that rarely bares its barbs."],
+[31,"Nidoqueen",["poison","ground"],1.3,60.0,90,92,87,75,85,76,"Armor-like scales shield its powerful charge."],
+[32,"Nidoran\u2642",["poison"],0.5,9.0,46,57,40,40,40,50,"Its ears swivel in every direction for danger."],
+[33,"Nidorino",["poison"],0.9,19.5,61,72,57,55,55,65,"A horn harder than diamond — temper shorter too."],
+[34,"Nidoking",["poison","ground"],1.4,62.0,81,102,77,85,75,85,"One swing of its tail can bend steel poles."],
+[35,"Clefairy",["fairy"],0.6,7.5,70,45,48,60,65,35,"Drawn by moonlight, it dances on quiet mountains."],
+[36,"Clefable",["fairy"],1.3,40.0,95,70,73,95,90,60,"It steps so lightly it seems to skip on air."],
+[37,"Vulpix",["fire"],0.6,9.9,38,41,40,50,65,65,"Its six tails grow warmer as it matures."],
+[38,"Ninetales",["fire"],1.1,19.9,73,76,75,81,100,100,"Nine tails hold mystical, long-lived power."],
+[39,"Jigglypuff",["normal","fairy"],0.5,5.5,115,45,20,45,25,20,"Its lullaby puts anyone who hears it to sleep."],
+[40,"Wigglytuff",["normal","fairy"],1.0,12.0,140,70,45,85,50,45,"Its fine fur feels as smooth as velvet."],
+[41,"Zubat",["poison","flying"],0.8,7.5,40,45,35,30,40,55,"Emits ultrasonic waves to fly in total darkness."],
+[42,"Golbat",["poison","flying"],1.6,55.0,75,80,70,65,75,90,"Drinks over ten ounces of blood in one feed."],
+[43,"Oddish",["grass","poison"],0.5,5.4,45,50,55,75,65,30,"It buries itself by day and walks by night."],
+[44,"Gloom",["grass","poison"],0.8,8.6,60,65,70,85,75,40,"Drool from its mouth smells absolutely horrid."],
+[45,"Vileplume",["grass","poison"],1.2,18.6,75,80,85,110,90,50,"The world's largest petals shed allergy-inducing pollen."],
+[46,"Paras",["bug","grass"],0.3,5.4,35,70,55,45,55,25,"Mushrooms on its back drain its strength."],
+[47,"Parasect",["bug","grass"],1.0,29.5,60,95,80,60,80,30,"The mushroom calls all the shots now."],
+[48,"Venonat",["bug","poison"],1.0,30.0,60,55,50,40,55,45,"Big compound eyes work like radar."],
+[49,"Venomoth",["bug","poison"],1.5,12.5,70,65,60,90,75,90,"Fine scales of dust flutter from its wings."],
+[50,"Diglett",["ground"],0.2,0.8,10,55,30,35,45,95,"It tunnels so fast the ground trembles."],
+[51,"Dugtrio",["ground"],0.7,33.3,35,80,50,50,70,120,"Three diggers working one tunnel in perfect sync."],
+[52,"Meowth",["normal"],0.4,4.2,40,45,35,40,40,90,"Loves round shiny objects and pawing at coins."],
+[53,"Persian",["normal"],1.0,32.0,65,70,60,65,65,115,"Its elegant face hides a fickle, temperamental heart."],
+[54,"Psyduck",["water"],0.8,19.6,50,52,48,65,50,55,"Constant headaches unleash its mysterious powers."],
+[55,"Golduck",["water"],1.7,76.6,80,82,78,95,80,85,"Swims faster than any human champion."],
+[56,"Mankey",["fighting"],0.5,28.0,40,80,35,35,45,70,"Quick to anger and quicker to throw punches."],
+[57,"Primeape",["fighting"],1.0,32.0,65,105,60,60,70,95,"The angrier it gets, the stronger it fights."],
+[58,"Growlithe",["fire"],0.7,19.0,55,70,45,70,50,60,"Devoted to its trainer, wary of strangers."],
+[59,"Arcanine",["fire"],1.9,155.0,90,110,80,100,80,95,"Legendary for its beauty and blinding speed."],
+[60,"Poliwag",["water"],0.6,12.4,40,50,40,40,40,90,"The swirl on its belly points toward its innards."],
+[61,"Poliwhirl",["water"],1.0,20.0,65,65,65,50,50,90,"Its slick skin lets it slip out of any grip."],
+[62,"Poliwrath",["water","fighting"],1.3,54.0,90,95,95,70,90,70,"An expert swimmer trained in every martial art."],
+[63,"Abra",["psychic"],0.9,19.5,25,20,15,105,55,90,"Senses danger while asleep and teleports away."],
+[64,"Kadabra",["psychic"],1.3,56.5,40,35,30,120,70,105,"Its alpha waves can trigger headaches a mile off."],
+[65,"Alakazam",["psychic"],1.5,48.0,55,50,45,135,95,120,"A brain that never forgets anything it learns."],
+[66,"Machop",["fighting"],0.8,19.5,70,80,50,35,35,35,"Practices martial arts even while it sleeps."],
+[67,"Machoke",["fighting"],1.5,70.5,80,100,70,50,60,45,"A lifting belt holds back its tremendous power."],
+[68,"Machamp",["fighting"],1.6,130.0,90,130,80,65,85,55,"Four arms throw a thousand punches in two seconds."],
+[69,"Bellsprout",["grass","poison"],0.7,4.0,50,75,35,70,30,40,"Spits corrosive acid to melt whatever it catches."],
+[70,"Weepinbell",["grass","poison"],1.0,6.4,65,90,50,85,45,55,"Douses prey in fluid, then swallows it whole."],
+[71,"Victreebel",["grass","poison"],1.7,15.5,80,105,65,100,70,70,"Its pool of sweet nectar hides a deadly trap."],
+[72,"Tentacool",["water","poison"],0.9,45.5,40,40,35,50,100,70,"Drifts through shallow seas, stingers primed."],
+[73,"Tentacruel",["water","poison"],1.6,55.0,80,70,65,80,120,100,"Eighty tentacles mark it as a fearsome hunter."],
+[74,"Geodude",["rock","ground"],0.4,20.0,40,80,100,30,30,20,"Often mistaken for a rock — until it moves."],
+[75,"Graveler",["rock","ground"],1.0,105.0,55,95,115,45,45,35,"Rolls freely downhill, crushing what lies below."],
+[76,"Golem",["rock","ground"],1.4,300.0,80,120,130,55,65,45,"Once a year it sheds and regrows its rocky shell."],
+[77,"Ponyta",["fire"],1.0,30.0,50,85,55,65,65,90,"Its blazing mane singes nothing it accepts."],
+[78,"Rapidash",["fire"],1.7,95.0,65,100,70,80,80,105,"Gallops at 150 mph, mane streaming like flame."],
+[79,"Slowpoke",["water","psychic"],1.2,36.0,90,65,65,40,40,15,"Dim-witted and unhurried, yet oddly soothing."],
+[80,"Slowbro",["water","psychic"],1.6,78.5,95,75,110,100,80,30,"The Shellder on its tail became part of it."],
+[81,"Magnemite",["electric","steel"],0.3,6.0,25,35,70,95,55,45,"Rides electromagnetic waves, humming softly."],
+[82,"Magneton",["electric","steel"],1.0,60.0,50,60,95,120,70,70,"Three units bound by powerful magnetism."],
+[83,"Farfetch'd",["normal","flying"],0.8,15.0,52,65,55,58,62,60,"Wields its leek stalk like a prized sword."],
+[84,"Doduo",["normal","flying"],1.4,39.2,35,85,45,35,35,75,"Two heads take turns sleeping and standing watch."],
+[85,"Dodrio",["normal","flying"],1.8,85.2,60,110,70,60,60,110,"Three heads mean triple the alertness."],
+[86,"Seel",["water"],1.1,90.0,65,45,55,45,70,45,"Loves carving rings in ice with its horn."],
+[87,"Dewgong",["water","ice"],1.7,120.0,90,70,80,70,95,70,"Dozes in shallows warmed by the midday sun."],
+[88,"Grimer",["poison"],0.9,30.0,80,80,50,40,50,25,"Born from sludge transformed by moonlight rays."],
+[89,"Muk",["poison"],1.2,30.0,105,105,75,65,100,50,"A single drop of its ooze can pollute a pond."],
+[90,"Shellder",["water"],0.3,4.0,30,65,100,45,25,40,"Its shell clamps tight; the tongue is the weak spot."],
+[91,"Cloyster",["water","ice"],1.5,132.5,50,95,180,85,45,70,"Its spiked shell shrugs off even bomb blasts."],
+[92,"Gastly",["ghost","poison"],1.3,0.1,30,35,30,100,35,80,"A gaseous body that engulfs foes to suffocate them."],
+[93,"Haunter",["ghost","poison"],1.6,0.1,45,50,45,115,55,95,"Its lick slowly drains the victim's life force."],
+[94,"Gengar",["ghost","poison"],1.5,40.5,60,65,60,130,75,110,"Lurks in shadows, laughing at prey's fear."],
+[95,"Onix",["rock","ground"],8.8,210.0,35,45,160,30,45,70,"Bores through rock at 50 mph underground."],
+[96,"Drowzee",["psychic"],1.0,32.4,60,48,45,43,90,42,"Feeds on dreams; nightmares taste the worst."],
+[97,"Hypno",["psychic"],1.6,75.6,85,73,70,73,115,67,"Swings its pendulum to hypnotize in seconds."],
+[98,"Krabby",["water"],0.4,6.5,30,105,90,25,25,50,"Fiercely territorial; lost pincers regrow."],
+[99,"Kingler",["water"],1.3,60.0,55,130,115,50,50,75,"Its oversized claw crushes with immense force."],
+[100,"Voltorb",["electric"],0.5,10.4,40,30,50,55,55,100,"Mistaken for a Poké Ball — until it self-destructs."],
+[101,"Electrode",["electric"],1.2,66.6,60,50,70,80,80,150,"The more electricity it stores, the faster it gets."],
+[102,"Exeggcute",["grass","psychic"],0.4,2.5,60,40,80,60,45,40,"A cluster of seeds chattering in telepathic unison."],
+[103,"Exeggutor",["grass","psychic"],2.0,120.0,95,95,85,125,75,55,"Each head thinks independently — powerful when they agree."],
+[104,"Cubone",["ground"],0.4,6.5,50,50,95,40,50,35,"Wears the skull of its departed mother as a helmet."],
+[105,"Marowak",["ground"],1.0,45.0,60,80,110,50,80,45,"The bone it hurls is both its weapon and its art."],
+[106,"Hitmonlee",["fighting"],1.5,49.8,50,120,53,35,110,87,"Legs stretch freely to deliver devastating kicks."],
+[107,"Hitmonchan",["fighting"],1.4,50.2,50,105,79,35,110,76,"Throws punches faster than a champion's jab."],
+[108,"Lickitung",["normal"],1.2,65.5,90,55,75,60,75,30,"Its tongue stretches twice its body length."],
+[109,"Koffing",["poison"],0.6,1.0,40,65,95,60,45,35,"Bloats with toxic gases; can explode without warning."],
+[110,"Weezing",["poison"],1.2,9.5,65,90,120,85,70,60,"Two bodies fused; their gases mix into something fouler."],
+[111,"Rhyhorn",["ground","rock"],1.0,115.0,80,85,95,30,30,25,"Charges in straight lines — too dim to turn."],
+[112,"Rhydon",["ground","rock"],1.9,120.0,105,130,120,45,45,40,"Its drill horn bores clean through solid rock."],
+[113,"Chansey",["normal"],1.1,34.6,250,5,5,35,105,50,"Shares its nutritious eggs to bring good luck."],
+[114,"Tangela",["grass"],1.0,35.0,65,55,115,100,40,60,"Vines cloak its body — what lies beneath is a mystery."],
+[115,"Kangaskhan",["normal"],2.2,80.0,105,95,80,40,80,90,"Raises its young fiercely in its belly pouch."],
+[116,"Horsea",["water"],0.4,8.0,30,40,70,70,25,60,"Spits ink to slip away when danger nears."],
+[117,"Seadra",["water"],1.2,25.0,55,65,95,95,45,85,"Its spines secrete a venom potent enough to fell a whale."],
+[118,"Goldeen",["water"],0.6,15.0,45,67,60,35,50,63,"An elegant swimmer with a wickedly sharp horn."],
+[119,"Seaking",["water"],1.3,39.0,80,92,65,65,80,68,"Digs nesting pits in riverbeds with its horn."],
+[120,"Staryu",["water"],0.8,34.5,30,45,55,70,55,85,"Its crimson core pulses and glows mysteriously."],
+[121,"Starmie",["water","psychic"],1.1,80.0,60,75,85,100,85,115,"A gem core radiating waves no one can explain."],
+[122,"Mr. Mime",["psychic","fairy"],1.3,54.5,40,45,65,100,120,90,"Mimes walls so real they stop anything cold."],
+[123,"Scyther",["bug","flying"],1.5,56.0,70,110,80,55,80,105,"Moves so fast its scythes flash before it's seen."],
+[124,"Jynx",["ice","psychic"],1.4,40.6,65,50,35,115,95,95,"Its odd waddle is really a hypnotic rhythm dance."],
+[125,"Electabuzz",["electric"],1.1,30.0,65,83,57,95,85,105,"Feeds on the power lines of whole cities."],
+[126,"Magmar",["fire"],1.3,44.5,65,93,57,100,85,93,"Born in volcano craters; its blood burns like lava."],
+[127,"Pinsir",["bug"],1.5,55.0,65,125,100,55,70,85,"Its pincers crush, hoist and hurl any foe."],
+[128,"Tauros",["normal"],1.4,88.4,75,100,95,40,70,110,"Whips itself with its own tails into a charge."],
+[129,"Magikarp",["water"],0.9,10.0,20,10,55,15,20,80,"Famously feeble — yet famously persistent."],
+[130,"Gyarados",["water","flying"],6.5,235.0,95,125,79,60,100,81,"Once roused, its rage levels whole towns."],
+[131,"Lapras",["water","ice"],2.5,220.0,130,85,80,85,95,60,"Gladly ferries travelers across the sea."],
+[132,"Ditto",["normal"],0.3,4.0,48,48,48,48,48,48,"Rearranges its cells to copy whatever it sees."],
+[133,"Eevee",["normal"],0.3,6.5,55,55,50,45,65,55,"Its unstable genetic code holds many futures."],
+[134,"Vaporeon",["water"],1.0,29.0,130,65,60,110,95,65,"Its cell structure mirrors water molecules itself."],
+[135,"Jolteon",["electric"],0.8,24.5,65,65,60,110,95,130,"Charged fur stands up as needle-sharp quills."],
+[136,"Flareon",["fire"],0.9,25.0,65,130,60,95,110,65,"Its flame sac burns at a scorching 1,650 degrees."],
+[137,"Porygon",["normal"],0.8,33.5,65,60,70,85,75,40,"Entirely man-made — and fully programmable."],
+[138,"Omanyte",["rock","water"],0.4,7.5,35,40,100,90,55,35,"An ancient spiral-shell Pokémon raised from fossils."],
+[139,"Omastar",["rock","water"],1.0,35.0,70,60,125,115,70,55,"A beak strong enough to crack shells and stone."],
+[140,"Kabuto",["rock","water"],0.5,11.5,30,80,90,55,45,55,"Revived from a dome-shaped fossil shard."],
+[141,"Kabutops",["rock","water"],1.3,40.5,60,115,105,65,70,80,"Sickle claws carve through prey in the deep."],
+[142,"Aerodactyl",["rock","flying"],1.8,59.0,80,105,65,60,75,130,"An ancient terror that ruled primeval skies."],
+[143,"Snorlax",["normal"],2.1,460.0,160,110,65,65,110,30,"Eats hundreds of pounds daily, then naps a month."],
+[144,"Articuno",["ice","flying"],1.7,55.4,90,85,100,95,125,85,"Where it flies, snow drifts down midsummer."],
+[145,"Zapdos",["electric","flying"],1.6,52.6,90,90,85,125,90,100,"Thunderclouds crackle at its approach."],
+[146,"Moltres",["fire","flying"],2.0,60.0,90,100,90,125,85,90,"Heals its wounds by plunging into magma."],
+[147,"Dratini",["dragon"],1.8,3.3,41,64,45,50,50,50,"Sheds its skin as it grows ever larger."],
+[148,"Dragonair",["dragon"],4.0,16.5,61,84,65,70,70,70,"Neck orbs command the weather around it."],
+[149,"Dragonite",["dragon","flying"],2.2,210.0,91,134,95,100,100,80,"Circles the entire globe in sixteen hours."],
+[150,"Mewtwo",["psychic"],2.0,122.0,106,110,90,154,90,130,"A lab creation that grew far beyond its makers."],
+[151,"Mew",["psychic"],0.4,4.0,100,100,100,100,100,100,"Carries the genetic blueprint of every Pokémon."]
+];
+
+const TYPE_COLOR={normal:"#A8A77A",fire:"#EE8130",water:"#6390F0",electric:"#F7D02C",
+grass:"#7AC74C",ice:"#96D9D6",fighting:"#C22E28",poison:"#A33EA1",ground:"#E2BF65",
+flying:"#A98FF3",psychic:"#F95587",bug:"#A6B91A",rock:"#B6A136",ghost:"#735797",
+dragon:"#6F35FC",fairy:"#D685AD",steel:"#B7B7CE",dark:"#705746"};
+
+const SPRITE=id=>`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+const ARTWORK=id=>`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+const FALLBACK="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(
+'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" rx="14" fill="#232946"/><circle cx="48" cy="48" r="26" fill="none" stroke="#4a5588" stroke-width="4"/><circle cx="48" cy="48" r="8" fill="#4a5588"/><text x="48" y="88" font-size="11" fill="#98a1c6" text-anchor="middle" font-family="sans-serif">sprite offline</text></svg>');
+
+/* ============ state + elements ============ */
+const S={q:"",types:new Set(),sort:"dex"};
+const $=s=>document.querySelector(s);
+const grid=$("#grid"),empty=$("#empty"),typebar=$("#typebar"),
+      overlay=$("#overlay"),qEl=$("#q"),sortEl=$("#sort");
+let currentId=null;
+let lastFocus=null; // grid card to restore focus to after the modal closes
+
+const pad=n=>String(n).padStart(3,"0");
+const badge=t=>`<span class="badge" style="--tc:${TYPE_COLOR[t]}">${t}</span>`;
+const byId=id=>DEX.find(p=>p[0]===id);
+const MAX_ID=DEX[DEX.length-1][0]; // ids are sequential 1..N
+
+/* ============ type chips ============ */
+(function buildChips(){
+  const counts={};
+  DEX.forEach(p=>p[2].forEach(t=>counts[t]=(counts[t]||0)+1));
+  Object.keys(counts).sort((a,b)=>counts[b]-counts[a]||a.localeCompare(b)).forEach(t=>{
+    const b=document.createElement("button");
+    b.className="chip";b.textContent=`${t} ${counts[t]}`;
+    b.style.setProperty("--tc",TYPE_COLOR[t]);
+    b.setAttribute("aria-pressed","false");
+    b.onclick=()=>{S.types.has(t)?S.types.delete(t):S.types.add(t);
+      b.setAttribute("aria-pressed",String(S.types.has(t)));render();};
+    typebar.appendChild(b);
+  });
+})();
+
+/* ============ render pipeline: filter -> sort -> paint ============ */
+function visible(){
+  let list=DEX.filter(p=>{
+    const id=p[0],name=p[1];
+    const hitQ=!S.q||String(id)===S.q.replace(/^#?0*/,"")||
+      name.toLowerCase().includes(S.q.toLowerCase())||
+      pad(id).includes(S.q.replace("#",""));
+    return hitQ&&(!S.types.size||p[2].some(t=>S.types.has(t)));
+  });
+  const cmp={dex:(a,b)=>a[0]-b[0],"dex-desc":(a,b)=>b[0]-a[0],
+    name:(a,b)=>a[1].localeCompare(b[1]),bst:(a,b)=>BST(b)-BST(a)};
+  return list.sort(cmp[S.sort]);
+}
+
+function render(){
+  const list=visible();
+  grid.innerHTML=list.map(p=>{
+    const [id,name,types]=p;
+    const bst=BST(p);
+    return `<article class="card${document.body.classList.contains("squad")?"":" "}"
+      data-id="${id}" role="listitem"
+      tabindex="0" aria-label="#${pad(id)} ${name}, ${types.join(" and ")}, base stat total ${bst}"
+      style="--tint:${TYPE_COLOR[types[0]]}">
+      <span class="num">#${pad(id)}</span>
+      <img src="${SPRITE(id)}" alt="" loading="lazy" width="96" height="96"
+        onerror="this.onerror=null;this.src=FALLBACK">
+      <h2>${name}</h2>
+      <div class="badges">${types.map(badge).join("")}</div>
+      <div class="bst">BST ${bst}</div>
+    </article>`;}).join("");
+  empty.hidden=list.length>0;
+  if(document.body.classList.contains("squad")){
+    grid.querySelectorAll('.card').forEach(c=>{
+      if(c.dataset.id==="7")c.classList.add("leader");});
+  }
+}
+
+/* ============ modal ============ */
+const STAT_LABELS=["HP","Attack","Defense","Sp. Atk","Sp. Def","Speed"];
+const BST=p=>p.slice(5,11).reduce((a,b)=>a+b,0);
+function openModal(id){
+  currentId=id;const p=byId(id);if(!p)return;
+  const pid=p[0],name=p[1],types=p[2],ht=p[3],wt=p[4],flavor=p[11];
+  const st=p.slice(5,11),bst=BST(p);
+  $("#mNum").textContent=`POKÉDEX ENTRY #${pad(pid)}`;
+  $("#mName").textContent=name;
+  const img=$("#mImg");
+  img.src=ARTWORK(pid);img.alt=`Official artwork of ${name}`;
+  img.onerror=()=>{img.onerror=null;img.src=FALLBACK;};
+  $("#mDesc").textContent=`“${flavor}”`;
+  $("#mTypes").innerHTML=types.map(badge).join("");
+  $("#mHt").textContent=ht.toFixed(1)+" m";
+  $("#mWt").textContent=wt.toFixed(1)+" kg";
+  $("#mBst").textContent=bst;
+  $("#mStats").innerHTML=st.map((v,i)=>`<div class="stat"><span>${STAT_LABELS[i]}</span>
+      <span class="bar"><i style="width:${Math.min(100,v/160*100)}%"></i></span>
+      <span style="color:var(--ink)">${v}</span></div>`).join("");
+  $("#mPrev").disabled=id<=1;
+  $("#mNext").disabled=id>=MAX_ID;
+  lastFocus=document.activeElement;
+  overlay.classList.add("open");
+  $("#mClose").focus();
+}
+function closeModal(){overlay.classList.remove("open");currentId=null;if(lastFocus&&lastFocus.focus)lastFocus.focus();}
+$("#mClose").onclick=closeModal;
+overlay.addEventListener("click",e=>{if(e.target===overlay)closeModal();});
+$("#mPrev").onclick=()=>openModal(Math.max(1,currentId-1));
+$("#mNext").onclick=()=>openModal(Math.min(MAX_ID,currentId+1));
+document.addEventListener("keydown",e=>{
+  if(!overlay.classList.contains("open"))return;
+  if(e.key==="Escape")closeModal();
+  else if(e.key==="ArrowLeft")openModal(Math.max(1,currentId-1));
+  else if(e.key==="ArrowRight")openModal(Math.min(MAX_ID,currentId+1));
+});
+
+/* card interactions (event delegation) */
+grid.addEventListener("click",e=>{
+  const c=e.target.closest(".card");if(c)openModal(+c.dataset.id);
+});
+grid.addEventListener("keydown",e=>{
+  const c=e.target.closest(".card");
+  if(c&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openModal(+c.dataset.id);}
+});
+
+/* ============ controls ============ */
+qEl.addEventListener("input",()=>{S.q=qEl.value.trim();render();});
+sortEl.addEventListener("change",()=>{S.sort=sortEl.value;render();});
+
+/* ============ toast ============ */
+let toastTimer=null;
+function toast(msg){
+  const t=$("#toast");t.textContent=msg;t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("show"),3800);
+}
+
+/* ============ 🕶️ EASTER EGG — The Squirtle Squad ============
+   Open Squirtle (#007), then tap/click his artwork 3× fast.
+   Third tap assembles the Squad. Tap 3× again to disband.     */
+let taps=0,tapTimer=null;
+$("#mImg").addEventListener("click",()=>{
+  if(currentId!==7){ // wrong Pokémon: reset silently with a hint once per open
+    taps=0;return;}
+  taps++;clearTimeout(tapTimer);
+  tapTimer=setTimeout(()=>{taps=0;},1400);
+  if(taps>=3){
+    taps=0;
+    const on=document.body.classList.toggle("squad");
+    if(on){
+      const fx=$("#fx");fx.innerHTML="";
+      const glyphs=["🕶️","💧","🐢"];
+      for(let i=0;i<14;i++){
+        const d=document.createElement("span");
+        d.className="drop";d.textContent=glyphs[i%glyphs.length];
+        d.style.left=(Math.random()*100)+"vw";
+        d.style.animationDuration=(4.5+Math.random()*5)+"s";
+        d.style.animationDelay=(-Math.random()*6)+"s";
+        d.style.fontSize=(16+Math.random()*22)+"px";
+        fx.appendChild(d);
+      }
+      toast("🕶️ Squirtle Squad assembled! Nobody messes with the Squad.");
+    }else{
+      $("#fx").innerHTML="";
+      toast("Squad disbanded… for now.");
+    }
+    render(); // repaint leader highlight
+  }
+});
+
+render();
+</script>
+</body>
+</html>
